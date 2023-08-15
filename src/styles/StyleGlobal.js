@@ -46,9 +46,9 @@ export const styleHome = StyleSheet.create({
 //-----------------------stylo modal-----------------------
 export const stylesModal = StyleSheet.create({
     centeredView: {
-        position: 'absolute',
-        bottom: 10,
-        width: '90%',
+        // position: 'absolute',
+        // bottom: 10,
+        width: '100%',
         alignItems: 'center',
         alignSelf: 'center',
 
@@ -78,12 +78,12 @@ export const stylesModal = StyleSheet.create({
     },
    
     contentModalTextProduct: {
-        // marginTop: '5%',
+        marginTop: '5%',
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        padding: 15,
+        // padding: 15,
     },
 
 });

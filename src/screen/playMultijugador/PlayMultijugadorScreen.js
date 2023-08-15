@@ -1,11 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, TouchableOpacity, Text } from 'react-native';
 import { ImageBackground, SafeAreaView, StyleSheet, View } from 'react-native';
-import { COLOR_BACKGROUND_ANARANJADO, COLOR_BACKGROUND_CARD_WHITE } from '../../styles/StyleGlobal';
+import { COLOR_BACKGROUND_ANARANJADO, COLOR_BACKGROUND_ANARANJADO_CLARO, COLOR_BACKGROUND_CARD_WHITE, TEXT_BLACK } from '../../styles/StyleGlobal';
+import XImage from '../../assets/cruzar.png';
+import OImage from '../../assets/letra-o.png';
+import { Button } from '@rneui/base';
+import MessageModal from '../../components/MessageModal';
+import AdsPublicidad from '../AdsAdMob/AdsPublicidad';
+
+const playerX = {
+    name: 'X',
+    image: XImage,
+};
+
+const playerO = {
+    name: 'O',
+    image: OImage,
+};
 
 const PlayMultijugadorScreen = ({ navigation }) => {
     const [board, setBoard] = useState(Array(9).fill(null));
     const [player, setPlayer] = useState('X');
+    const [statusModal, setStatusModal] = useState(false);
+    const [messageModal, setMessageModal] = useState("");
+    const [counterGame, setCounterGame] = useState({
+        playerX: 0,
+        playerO: 0,
+    })
+
+    useEffect(() => {
+        hanldeResult();
+    }, [board]);
+
+    useEffect(() => {
+        if(statusModal){
+            setTimeout(() => {
+                setStatusModal(false);
+            }, 5000);
+        }
+    }, [statusModal]);
+
 
     const checkWinner = () => {
         const winPatterns = [
@@ -17,12 +51,37 @@ const PlayMultijugadorScreen = ({ navigation }) => {
         for (const pattern of winPatterns) {
             const [a, b, c] = pattern;
             if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                console.log("Ganador: ", board[a]);
                 return board[a];
             }
         }
 
         return null;
     };
+
+    const hanldeResult = () => {
+        const winner = checkWinner();
+        if (winner) {
+            if (winner === 'X') {
+            setStatusModal(true);
+            setMessageModal("X");
+                setCounterGame({
+                    ...counterGame,
+                    playerX: counterGame.playerX + 1,
+                });
+            } else {
+                setStatusModal(true);
+                setMessageModal("O");
+                setCounterGame({
+                    ...counterGame,
+                    playerO: counterGame.playerO + 1,
+                });
+            }
+        } else if (!board.includes(null)) {
+            setStatusModal(true);
+            setMessageModal(null);
+        }
+    }
 
     const handleClick = (index) => {
         if (board[index] || checkWinner()) {
@@ -56,16 +115,20 @@ const PlayMultijugadorScreen = ({ navigation }) => {
             borderLeftWidth,
             borderBottomWidth,
             borderRightWidth,
-            borderColor: COLOR_BACKGROUND_CARD_WHITE,
+            borderColor: TEXT_BLACK,
             width: 100,
             height: 100,
+            borderRadius: 5,
             justifyContent: 'center',
             alignItems: 'center',
         };
 
+        console.log("index: ", board[index]);
+
         return (
             <TouchableOpacity style={squareStyle} onPress={() => handleClick(index)}>
-                <Text style={styles.squareText}>{board[index]}</Text>
+                {board[index] === playerX.name && <Image source={playerX.image} style={{ width: 50, height: 50, tintColor: TEXT_BLACK }} />}
+                {board[index] === playerO.name && <Image source={playerO.image} style={{ width: 50, height: 50, tintColor: TEXT_BLACK }} />}
             </TouchableOpacity>
         );
     };
@@ -74,15 +137,32 @@ const PlayMultijugadorScreen = ({ navigation }) => {
         const winner = checkWinner();
         if (winner) {
             return (
-                <Text style={styles.status}>Ganador: {winner}</Text>
+                <View style={styles.viewStatus}>
+                    <Text style={styles.statusActual}>Ganador: </Text>
+                    <Image source={winner === 'X' ? playerX.image : playerO.image} style={{ width: 30, height: 30, tintColor: 'white' }} />
+                </View>
             );
         } else if (!board.includes(null)) {
             return (
-                <Text style={styles.status}>Empate</Text>
+                <View style={styles.viewStatus}>
+                    <Text style={styles.statusActual}>Empate</Text>
+                </View>
             );
         } else {
             return (
-                <Text style={styles.status}>Jugador actual: {player}</Text>
+                <View>
+                    {player === 'X' ?
+                        <View style={styles.viewStatus}>
+                            <Text style={styles.statusActual}>Jugador actual: </Text>
+                            <Image source={playerX.image} style={{ width: 30, height: 30, tintColor: 'white' }} />
+                        </View>
+                        :
+                        <View style={styles.viewStatus}>
+                            <Text style={styles.statusActual}>Jugador actual: </Text>
+                            <Image source={playerO.image} style={{ width: 30, height: 30, tintColor: 'white' }} />
+                        </View>
+                    }
+                </View>
             );
         }
     };
@@ -92,9 +172,34 @@ const PlayMultijugadorScreen = ({ navigation }) => {
             <ImageBackground
                 source={require('../../assets/fondoPantalla.png')}
                 style={{ flex: 1, resizeMode: 'cover' }}
-                imageStyle={{ opacity: 0.5 }}
+                // imageStyle={{ opacity: 0.9 }}
             >
                 <View style={{ padding: 15 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            borderRadius: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Image source={XImage} style={{ width: 35, height: 35, tintColor: TEXT_BLACK }} />
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', color: TEXT_BLACK }}> : {counterGame.playerX}</Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 10,
+                            borderRadius: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Image source={OImage} style={{ width: 35, height: 35, tintColor: TEXT_BLACK }} />
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', color: TEXT_BLACK }}> : {counterGame.playerO}</Text>
+                        </View>
+                    </View>
+
+
                     <View style={styles.board}>
                         <View style={styles.row}>
                             {renderSquare(0)}
@@ -113,10 +218,18 @@ const PlayMultijugadorScreen = ({ navigation }) => {
                         </View>
                     </View>
                     {renderStatus()}
-                    <TouchableOpacity style={styles.restartButton} onPress={handleRestart}>
-                        <Text style={styles.restartButtonText}>Reiniciar</Text>
-                    </TouchableOpacity>
+
+                    <View style={styles.restartButton}>
+                        <Button
+                            title="Reiniciar"
+                            onPress={handleRestart}
+                            buttonStyle={styles.restartButtonStyle}
+                        />
+                    </View>
                 </View>
+                
+                <MessageModal message={messageModal} status={statusModal} />
+                <AdsPublicidad />
             </ImageBackground>
         </SafeAreaView>
     );
@@ -146,23 +259,36 @@ const styles = StyleSheet.create({
         fontSize: 36,
         color: COLOR_BACKGROUND_CARD_WHITE,
     },
+    viewStatus: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        padding: 10,
+        alignContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        opacity: 0.8,
+        height: 50,
+    },
     status: {
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
         color: COLOR_BACKGROUND_CARD_WHITE,
     },
-    restartButton: {
-        backgroundColor: COLOR_BACKGROUND_CARD_WHITE,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-        alignSelf: 'center',
-    },
-    restartButtonText: {
-        color: COLOR_BACKGROUND_ANARANJADO,
-        fontSize: 18,
+    statusActual: {
+        color: 'white',
         fontWeight: 'bold',
+        fontSize: 16,
+    },
+    restartButton: {
+        // alignSelf: 'center',
+        marginTop: 20,
+    },
+    restartButtonStyle: {
+        borderRadius: 10,
+        height: 50,
+        backgroundColor: COLOR_BACKGROUND_ANARANJADO_CLARO,
     },
 });
 

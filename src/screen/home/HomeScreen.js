@@ -6,9 +6,10 @@ import {
     ImageBackground,
     Dimensions,
 } from 'react-native';
-import { Button, Image } from '@rneui/base';
+import { Button, Image, Text } from '@rneui/base';
 import { COLOR_BACKGROUND_ANARANJADO, COLOR_BACKGROUND_CARD_WHITE, styleHome } from '../../styles/StyleGlobal';
 import SplashScreen from '../splash/SplashScreen';
+import { NAME_COMPANY, VERSION_APP } from '../../constantes/Constantes';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -28,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
             icon: 'account-multiple',
         },
     ];
-   
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -72,7 +73,25 @@ const HomeScreen = ({ navigation }) => {
                             />
                         ))}
                     </View>
+                </View>
 
+                <View style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    padding: 10,
+                }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{NAME_COMPANY}</Text>
+                    <Text style={{
+                        fontSize: 18,
+                        color: 'gray',
+                        marginTop: 5,
+                        // fontWeight: 'bold'
+                    }}>
+                        Versión: {VERSION_APP}
+                    </Text>
                 </View>
             </ImageBackground>
         </SafeAreaView>
