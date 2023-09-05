@@ -8,25 +8,27 @@ import {
 } from 'react-native';
 import { Button, Image, Text } from '@rneui/base';
 import { COLOR_BACKGROUND_ANARANJADO, COLOR_BACKGROUND_CARD_WHITE, styleHome } from '../../styles/StyleGlobal';
-import SplashScreen from '../splash/SplashScreen';
 import { NAME_COMPANY, VERSION_APP } from '../../constantes/Constantes';
 
-const HomeScreen = ({ navigation }) => {
+const PlayLevelsScreen = ({ navigation }) => {
 
 
 
     const ArrayBotones = [
         {
             id: 1,
-            title: 'Iniciar Juego',
-            onPress: () => navigation.navigate('NivelScreen'),
-            icon: 'gamepad-variant',
+            title: 'Fácil',
+            onPress: () => navigation.navigate('PlayJuegoScreen'),
         },
         {
             id: 2,
-            title: 'Multijugador',
-            onPress: () => navigation.navigate('PlayMultijugadorScreen'),
-            icon: 'account-multiple',
+            title: 'Medio',
+            onPress: () => navigation.navigate('PlayMedioScreen'),
+        },
+        {
+            id: 3,
+            title: 'Difícil',
+            onPress: () => navigation.navigate('PlayDificilScreen'),
         },
     ];
 
@@ -64,12 +66,7 @@ const HomeScreen = ({ navigation }) => {
                                 buttonStyle={styleHome.containerNaranja}
                                 containerStyle={{ borderRadius: 60, marginBottom: 10 }}
                                 onPress={item.onPress}
-                                icon={{
-                                    name: item.icon,
-                                    size: 24,
-                                    color: 'white',
-                                    type: 'material-community',
-                                }}
+                                
                             />
                         ))}
                     </View>
@@ -98,7 +95,7 @@ const HomeScreen = ({ navigation }) => {
     );
 };
 
-export default HomeScreen;
+export default PlayLevelsScreen;
 
 const styles = StyleSheet.create({
     container: {

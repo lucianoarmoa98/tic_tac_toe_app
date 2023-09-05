@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Image, TouchableOpacity, Text } from 'react-native';
 import { ImageBackground, SafeAreaView, StyleSheet, View } from 'react-native';
-import { COLOR_BACKGROUND_ANARANJADO, COLOR_BACKGROUND_ANARANJADO_CLARO, COLOR_BACKGROUND_CARD_WHITE, TEXT_BLACK } from '../../styles/StyleGlobal';
+import { COLOR_BACKGROUND_ANARANJADO, COLOR_BACKGROUND_ANARANJADO_CLARO, COLOR_BACKGROUND_CARD_WHITE, TEXT_BLACK } from '../../../styles/StyleGlobal';
 import { Button } from '@rneui/base';
-import XImage from '../../assets/cruzar.png';
-import OImage from '../../assets/letra-o.png';
-import MessageModal from '../../components/MessageModal';
-import AdsPublicidad from '../AdsAdMob/AdsPublicidad';
+import XImage from '../../../assets/cruzar.png';
+import OImage from '../../../assets/letra-o.png';
+import MessageModal from '../../../components/MessageModal';
+import AdsPublicidad from '../../AdsAdMob/AdsPublicidad';
+import MessageModalSolo from '../../../components/MessageModalSolo';
 
 const playerX = {
     name: 'X',
@@ -192,7 +193,7 @@ const PlayJuegoScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ImageBackground
-                source={require('../../assets/fondoPantalla.png')}
+                source={require('../../../assets/fondoPantalla.png')}
                 style={{ flex: 1, resizeMode: 'cover' }}
                 // imageStyle={{ opacity: 0.5 }}
             >
@@ -251,7 +252,7 @@ const PlayJuegoScreen = ({ navigation }) => {
                     </View>
                 </View>
 
-                <MessageModal message={messageModal} status={statusModal} />
+                <MessageModalSolo message={messageModal} status={statusModal} />
                 <AdsPublicidad />
             </ImageBackground>
         </SafeAreaView>
