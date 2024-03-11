@@ -55,11 +55,17 @@ const PlayDificilScreen = ({ navigation }) => {
             }
             return acc;
         }, []);
-    
+
         if (emptySquares.length > 0) {
-            const possibleWin = checkPossibleWin(board, playerX.name); // Verifica las posibles victorias del jugador humano
-            const aiMove = calculateBestMove(board, playerO.name, possibleWin);
-            handleClick(aiMove);
+            // Prioritize strategic moves
+            const possibleWin = checkPossibleWin(board, playerX.name);
+            const bestMove = calculateBestMove(board, playerO.name, possibleWin);
+
+            // Introduce randomness with a 20% chance
+            const shouldPlayRandom = Math.random() < 0.2;
+            const chosenMove = shouldPlayRandom ? emptySquares[Math.floor(Math.random() * emptySquares.length)] : bestMove;
+
+            handleClick(chosenMove);
         }
     };
     
@@ -69,7 +75,7 @@ const PlayDificilScreen = ({ navigation }) => {
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
             [0, 4, 8], [2, 4, 6]
         ];
-    
+
         for (const pattern of winPatterns) {
             const [a, b, c] = pattern;
             if (
@@ -80,7 +86,7 @@ const PlayDificilScreen = ({ navigation }) => {
                 return currentBoard[a] === null ? a : (currentBoard[b] === null ? b : c);
             }
         }
-    
+
         return null;
     };
 
@@ -88,6 +94,13 @@ const PlayDificilScreen = ({ navigation }) => {
         let bestScore = -Infinity;
         let bestMove = null;
     
+        if (possibleWin === null) {
+            const centerMove = 4;
+            if (currentBoard[centerMove] === null) {
+                return centerMove;
+            }
+        }
+        
         currentBoard.forEach((value, index) => {
             if (value === null) {
                 const newBoard = [...currentBoard];
@@ -102,6 +115,10 @@ const PlayDificilScreen = ({ navigation }) => {
     
         return possibleWin !== null ? possibleWin : bestMove;
     };
+
+    
+   
+
 
     
     
